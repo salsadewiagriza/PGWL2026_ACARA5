@@ -2,39 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Polyline;
 use Illuminate\Http\Request;
+use App\Models\polylinesModel;
 
 class PolylinesController extends Controller
 {
-    /**
-     * Store a newly created resource in storage.
-     */
+    protected $polylines;
+
+    public function __construct()
+    {
+        $this->polylines = new polylinesModel();
+    }
+
+    public function index()
+    {
+        //
+    }
+
+    public function create()
+    {
+        //
+    }
+
     public function store(Request $request)
     {
-        // Validasi input
-        $request->validate([
-            'geometry_polyline' => 'required',
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-        ]);
-
-        // Ambil data dari form
         $data = [
+            'geom' => $request->geometry_polyline,
             'name' => $request->name,
             'description' => $request->description,
-            'geom' => $request->geometry_polyline,
         ];
 
-        // Simpan ke database
-        if (Polyline::create($data)) {
-            return redirect()->route('peta')
-                ->with('success', 'Data polyline berhasil disimpan.');
-        }
+        $this->polylines->create($data);
 
-        // Jika gagal
         return redirect()->route('peta')
-            ->with('error', 'Gagal menyimpan data polyline.');
+            ->with('success', 'Polyline berhasil disimpan.');
     }
+
+    public function show(string $id) {}
+    public function edit(string $id) {}
+    public function update(Request $request, string $id) {}
+    public function destroy(string $id) {}
 }
